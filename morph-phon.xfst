@@ -57,14 +57,15 @@ define SurfaceLetter ConsSurface | Vsurface;
 
 ! Intermediate symbols with no surface forms
 define Boundary %@MB | %@RB | %@dB ;
-define IntSym   Boundary | %@NCOMP | %@opt3 | %@APOS;
+define IntSym   Boundary | %@M | %@MREDUP | %@NCOMP | %@opt3 | %@APOS | %^NS | %^NNS;
 
+define Digit %0|1|2|3|4|5|6|7|8|9;
 
 !
 ! Delete the stress-related intermediate symbols
 !
 
-define delStressMarks    ["^NS"|"^NNS"] -> 0;
+define delStressMarks    ["^NS"|"^NNS"|ˈ] -> 0;
 
 
 !
@@ -88,7 +89,7 @@ define Abbr     [..] -> %^sFUV    || .#. ConsSurface+ _ %@ABBR
 ! 
 ! NOTE: for generation it is better to limit these to only one.
 !
-define AposSym %'|%’|%´|%′;
+define AposSym APOSTROPHE_SYMS ;
 
 define replaceApos %@APOS -> 0 || _ Boundary+ .#.
                .o. %@APOS -> AposSym;
@@ -125,7 +126,8 @@ define NumericInsSilentP [..] -> %^sBRV %^sVC || %0^{12,14} ./. %@tSep  _ %@RB
                      .o. [..] -> %^sBUV %^sVC || %0^{9,11}  ./. %@tSep  _ %@RB
                      .o. [..] -> %^sBRV %^sVC || %0^{6,8}   ./. %@tSep  _ %@RB
                      .o. [..] -> %^sFUV %^sVC || %0^{3,5}   ./. %@tSep  _ %@RB
-                     .o. [..] -> %^sFRV %^sVC || %0^2      _ %@RB
+                     .o. [..] -> %^sFRV %^sVC || Digit %0^2      _ %@RB
+                     .o. [..] -> %^sBUV %^sVC || \Digit %0^2     _ %@RB
                      .o. [..] -> %^sBRV %^sVC || [1|3] %0  _ %@RB
                      .o. [..] -> %^sFUV       || 2 %0      _ %@RB
                      .o. [..] -> %^sBUV %^sUC || 4 %0      _ %@RB
@@ -191,7 +193,7 @@ define NumericSeparator     %@tSep -> THOUSAND_SEPARATOR
 !
 ! TODO: there is some double work done in parts of this rule
 
-define CompNoun [ %^%(s%) %^I -> 0 || _ %@NCOMP Boundary l %^A r ]
+define CompNoun [ %^%(s%) %^I -> 0 || _ %@NCOMP Boundary l (IntSym) %^A r ]
            .o.  [ l %^A r -> l %^A r %@MB %^%(s%) %^I 
                 || %@NCOMP Boundary _ %@MB ]
            .o.  [ %^%(s%) %^I %@MB l %^A r -> l %^A r %@MB %^%(s%) %^I 
@@ -207,18 +209,20 @@ define CompNoun [ %^%(s%) %^I -> 0 || _ %@NCOMP Boundary l %^A r ]
 ! - before another (s)I
 ! - before lArI
 ! - after lI, lIk, sIz, CI
+! - after  -(y)AsI
 ! - and optionally after aynı and before a case suffix 
 ! 
 ! TODO/CHECK: It seems not to be deleted afater -lIk in some cases. 
 !  `ev hayvanılık??'
 !
 
-define DeleteSI  %^%(s%) %^I -> 0 ||          _ Boundary %^%(s%) %^I Boundary,
-                                              _ Boundary l %^A r %^I Boundary,
-                                              _ Boundary [ l %^I | 
-                                                           l %^I k | 
-                                                           s %^I z | 
-                                                           %^C %^I ],
+define DeleteSI  %^%(s%) %^I -> 0 ||     _ Boundary+ %^%(s%) %^I Boundary,
+                                         _ Boundary+ l %^A r %^I Boundary,
+                                         _ Boundary+ [ l %^I | 
+                                                       l %^I k | 
+                                                       s %^I z | 
+                                                       %^C %^I ],
+                                     %^%(y%) %^A s %^I Boundary+ _ %Boundary,
                                      %^%(s%) %^I %@RB AposSym _ %@MB
          .o.     %^%(s%) %^I (->) 0 ||
                            .#. {aynı} %@RB _ %@MB [ %^%(y%) %^A
@@ -348,7 +352,8 @@ define PronounExceptions  e -> a || .#. [b|s] _ n %@PRN %@RB %^%(y%) %^A %@MB
                                                            {o}   | 
                                                            {siz} | 
                                                            {bu}  | 
-                                                           {şu}
+                                                           {şu}  |
+                                                           {kim}
                                                          ] %@RB (AposSym) Boundary* (n) _
                                                         %^%(y%) l %^A %@MB
                       .o. n -> m 
@@ -413,6 +418,7 @@ define NbeforePassive [..] (->) n ||  .#. wordsPassiveN %@RB
 !                 option
 !       - the passive form of `anla' is `anlaşıl'
 !
+! TODO: LN2 repetition is ugly, it could be done nicer.
 !
 
 define PassiveLN  y (->) n  || k o _ %@RB  %^%(I%) %@LN %@MB
@@ -420,7 +426,10 @@ define PassiveLN  y (->) n  || k o _ %@RB  %^%(I%) %@LN %@MB
               .o. [..] -> t || .#. {kapa} %@RB _ %^%(I%) %@LN %@MB
               .o. [..] -> ş || .#. {anla} %@RB _ %^%(I%) %@LN %@MB
               .o. %@LN -> n || [Vall | l] IntSym* %^%(I%) _ %@MB
-              .o. %@LN -> l ;
+              .o. %@LN -> l 
+              .o. %@LN2 -> n || [Vall | l] IntSym* %^%(I%) _ %@MB
+              .o. %@LN2 -> l
+              ;
 
 !
 ! Replace intermediate symbol @CAUS with the correct form of causative suffix
@@ -474,12 +483,26 @@ define SpaceBeforeMI    %@miSPC -> " ";
 ! person suffixes it gets dropped completely.
 !
 
-define NegAorist  %^%(I%) r -> z || Boundary m %^A %@MB  
+define NegAorist  %^%(I%) r -> z || Boundary m (%^NNS) %^A %@MB  
                                    _ %@MB
-            .o. z -> 0 || Boundary m %^A %@MB 
+            .o. z -> 0 || Boundary m (%^NNS) %^A %@MB 
                          _ %@MB %^%(y%) %^I [m | z] %@MB
-            .o. %^%(y%) %^I -> 0 || Boundary m %^A %@MB %@MB
+            .o. %^%(y%) %^I -> 0 || Boundary m (%^NNS) %^A %@MB %@MB
                                    _ m %@MB;
+
+!
+! Insertion of a redundant negative marker -mA in 'duyMAmazlıktan', 
+! 'görMEmezlikten', etc. This happens only with a few verb roots, 
+! but we allow for all here. The suffix sequence is also rather 
+! specific, and does not occur (much) in other contexts.
+!
+! This is non-standard.
+!
+
+define DoubleNegative [..] (->) %@MB m %^A || Boundary m (%^NNS) %^A _ 
+                                              %@MB z [%@MB]+
+                                              ( l %^I %^k ) [%@MB]*
+                                              %^D %^A n ;
 
 !
 ! Buffer deletion
@@ -520,13 +543,13 @@ define DeYeException e -> i || .#. [d|y] _ %@RB Boundary* y
 !
 ! We change all to ^I here and let the vowel harmony do the rest.
 
-define YorException [a|e|%^A] -> %^I || _ Boundary (%^I) y o r %@MB;
+define YorException [a|e|%^A] -> %^I || _ Boundary (%^I) y IntSym* o r %@MB;
 
 !
-! Clitic mI
+! Question particle mI
 !
 !
-! We analyze question particle mI as a clitic. It normally follows
+! We analyze question particle mI as a free morpheme. It normally follows
 ! vowel harmony according to the preceding word. But we allow all
 ! combinations here. This option overgenerates.
 !
@@ -634,6 +657,24 @@ define DeleteSilentP [ Vsilent | ConsSilent ] -> 0;
 
 define KiKu i (->)  ü || ü [\Vall]* Boundary k _ %@MB ;
 
+
+!
+! m-reduplication
+!
+! This, in fact, is not reduplication in morphology, but reduplication
+! of words with a phonetic alternation. In a nutshell: replicated words
+! follow the original word, but the first letter/phoneme is replaced
+! with 'm' if the original word starts with a consonant, or an 'm' is
+! prepended to the original word if it starts with a vowel.
+!
+! For example, 'gözü mözü (şişmiş)', 'arabası marabası varmış'
+!
+
+define Mredup [..] -> m    || .#. _ [Vall] ?* %@MREDUP
+          .o. [Cons] ->  m  || .#. _ ?+ %@MREDUP;
+
+define DeleteMredup  %@MREDUP -> 0;
+
 !
 ! Filter for cleaning up the intermediate symbols in the analysis level
 ! we also deal with adding -sI to compound noun roots, since we use a
@@ -676,6 +717,7 @@ define AFilter    FSDevoicing.i
               .o. 0 <- %@DEL%@ 
               .o. 0 <- %@DELS%@ 
               .o. 0 <- %@DUP%@
+              .o. 0 <- ˈ
               .o. 0 <- %@dB
               .o. 0 <- (ConsSilent|Vsilent)
 #if (PERCENT_AS_PREFIX == 0)
@@ -685,6 +727,32 @@ define AFilter    FSDevoicing.i
               .o. ~[?*] <- Vall {<N><si>} 
               ;
 
+! A few analysis symbols may result from different surface forms.
+! In the morphological description, we keep theme saparate so that
+! they can be distinguished when needed. However, we do not want them
+! as different symbols in normal analysis strings, so we collapse them
+! here.
+! 
+define collapseAsymbols %: %0          -> 0 || %< p 3 p _ %> 
+                    .o. %: s I n l A r -> 0 || %< 3 p _ %>
+                    .o. %: s I n       -> 0 || %< 3 p _ %>
+                    .o. %: %0          -> 0 || %< 3 p _ %>
+                    .o. %: %0          -> 0 || %< 3 s _ %>
+                    .o. %: s A n A     -> 0 || %< 2 s _ %>
+                    .o. %: y I n       -> 0 || %< 2 s _ %>
+                    .o. %: y I n       -> 0 || %< 2 p _ %>
+                    .o. %: y I n I z   -> 0 || %< 2 p _ %>
+                    .o. %: s A n I z   -> 0 || %< 2 p _ %>
+#if (COLLAPSE_MA_MAK == 1)
+                    .o. m A (K)        -> 0 || %< v n %: i n f _ %>
+#endif
+                    .o. %: z           -> 0 || %< c v %: d e n _ %>
+                    .o. %: c I k       -> 0 || %< d i m _ %>
+                    .o. %: c A k       -> 0 || %< d i m _ %>
+                    .o. %: I c A k     -> 0 || %< d i m _ %>
+                    .o. %: A c A k     -> 0 || %< d i m _ %>
+                    .o. %: c A g I z   -> 0 || %< d i m _ %>
+                    ;
 
 define DeleteBoundary ["@MB" | "@RB"] -> 0 ;
 

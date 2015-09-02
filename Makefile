@@ -6,7 +6,7 @@ MAKEDEP=gcc -MD
 MAKEDEP=./makedepend.sh
 TARGETS=trmorph.fst segment.fst stem.fst guess.fst hyphenate.fst
 LEXCSRC=analyzer.lexc guesser.lexc morph.lexc number.lexc exceptions.lexc
-XFSTSRC=analyzer.xfst guesser.xfst hyphenate.xfst morph-phon.xfst segment.xfst stemmer.xfst
+XFSTSRC=analyzer.xfst guesser.xfst hyphenate.xfst morph-phon.xfst segment.xfst stemmer.xfst g2p.xfst
 DEPDIR=.dep
 FOMA = $(HOME)/foma/foma
 
@@ -71,6 +71,12 @@ g2p: g2p.fst
 g2p.fst: morph-phon.cpp.xfst g2p.cpp.xfst
 	$(FOMA) -f g2p.cpp.xfst
 
+#
+#
+#
+options.h: options.h-default
+	test -e $@ && echo "your $@ may be out of date, you need to update it manually." \
+		|| cp $< $@ 
 
 #
 # housekeeping goes below

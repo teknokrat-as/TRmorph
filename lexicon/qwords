@@ -4,12 +4,13 @@
 
 kim         QPrnPers;
 ne          QPrn;
-nere        QPrnLoc; ! TODO: use of this without inflection is non-standard
+ne          QAdj;
+nˈere        QPrnLoc; ! TODO: use of this without inflection is non-standard
 kaç         QNum; ! this behaves like numbers
 ne% zaman   QAdv;
 niye        QAdv;
 neden       QAdv;
 niçin       QAdv;
 hani        QPrnLoc;
-nasıl       QAdv;
-nasıl       QAdj;
+nˈasıl       QAdv;
+nˈasıl       QAdj;

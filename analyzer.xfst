@@ -19,7 +19,8 @@ source morph-phon.cpp.xfst
 ! Put all of them together. The order is important. 
 !
 clear stack
-read regex     AFilter
+read regex     collapseAsymbols.i
+           .o. AFilter 
            .o. Lexicon 
            .o. delStressMarks
            .o. Abbr
@@ -42,6 +43,9 @@ read regex     AFilter
            .o. Optative3
            .o. SpaceBeforeMI
            .o. NegAorist
+#if (DOUBLE_NEGATIVE == 1)
+           .o. DoubleNegative
+#endif
            .o. DeleteBuffer
            .o. DeYeException
            .o. YorException
@@ -52,6 +56,10 @@ read regex     AFilter
            .o. Redup
            .o. DeleteSilentP
            .o. KiKu
+#if (ALLOW_MREDUP == 1)
+           .o. Mredup
+#endif
+           .o. DeleteMredup
            .o. DeleteCircumflex
            .o. DeleteBoundary
 #if (CAPITALIZE == 1)

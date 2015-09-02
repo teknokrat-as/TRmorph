@@ -9,24 +9,18 @@ sen               PersPrn2s;
 o                 PersPrn3s;
 biz               PersPrn1p;
 siz               PersPrn2p;
-onlar             PersPrn3p;
+! onlar             PersPrn3p;
 bizler            PersPrn1p;
 sizler            PersPrn2p;
-kendi             PersPrnRfl3s;
-kendim            PersPrnRfl1s;
-kendin            PersPrnRfl2s;
-kendisi           PersPrnRfl3s;
-kendimiz          PersPrnRfl1p;
-kendiniz          PersPrnRfl2p;
-kendileri         PersPrnRfl3p;
+kendi             PrnRfl;
 birbir            PPrnBirBir; ! this has to be inflected
 
 bu                DemPrn;
 şu                DemPrn;
 o                 DemPrn;
 
-bura              LocPrn;
-şura              LocPrn;
+bˈura              LocPrn;
+şˈura              LocPrn;
 ora               LocPrn;
 
 âlem              PersPrn3p;
@@ -42,12 +36,12 @@ falanca           PersPrn3s;
 falan             PersPrn3s;
 felan             PersPrn3s;
 filan             PersPrn3s;
-herkes            PersPrn3p;
-herşey            Prn;  
-her% şey          Prn;
-hiçbirşey         Prn;
-hiç% kimse        Prn;
-hiçkimse          Prn;    ! is this singular?
+hˈerkes           PersPrn3s;
+herşey            Prn;
+her% şey          PrnNeg;
+hiçbirşey         PrnNeg;
+hiç% kimse        PrnNeg;
+hiçkimse          PrnNeg;    ! is this singular?
 insan             PersPrn3s;
 kimi              Prn;
 kimseci^k         Prn;
@@ -63,18 +57,18 @@ umum              Prn;
 yediden% yetmişe  Prn;
 yedi% mahalle     Prn;
 
-birisi            PersPrn3s;
-birileri          PersPrn3s;
-buncası           Prn;
+biri                PrnBiri;
+hiçbiri             PrnHicbiri;
+
+bˈuncası           Prn;
 cümlesi           Prn;
-hiçbirisi         Prn;
 kimisi            Prn;
-oncası            Prn;
+ˈoncası            Prn;
 ötekisi           Prn;
-şuncası           Prn;
+şˈuncası           Prn;
 bir% başkası      Prn;
 
 bir% diğeri       Prn;
-bazılarınız       Prn;
-bazılarımız       Prn;
+bˈazılarınız       Prn;
+bˈazılarımız       Prn;
 her% biri         Prn;

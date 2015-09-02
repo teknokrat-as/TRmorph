@@ -45,6 +45,15 @@
  */
 #define NOUN_APOSTROPHE 1
 
+
+/* APOSTROPHE_SYMS
+ *
+ * The symbols that are accepted as apostrophe. This will increase
+ * ambiguity in expressions involving apostrophe.
+ */
+
+#define APOSTROPHE_SYMS %'|%’|%´|%′|%ʼ
+
 /*
  * CAPITALIZE: this allows first letter of  any word to be capital. This 
  *             is fits typical use case of an analyzer. One may want to 
@@ -101,7 +110,7 @@
  *
  */
 
-#define GUESSER_MIN_LENGTH 1
+#define GUESSER_MIN_LENGTH 2
 #define GUESSER_MAX_LENGTH 10
 #define GUESSER_STEM 0
 
@@ -202,7 +211,7 @@
  *
  */
 
-#define ANALYZE_lA 0
+#define ANALYZE_lA 1
 
 /* AlLOW_mAG
  *
@@ -278,3 +287,38 @@
  */
 
 #define MARK_SUBCATEGORIES 1
+
+
+/* COLLAPSE_MA_MAK
+ *
+ * We normally collapse the infinitive forms with -mA and -mAk to a
+ * single analysis symbol <vn:inf>. This option allows them to be
+ * analyzed separately as <vn:infMA> and <vn:infMAK>. It may be handy
+ * for generation.
+ */
+
+#define COLLAPSE_MA_MAK 1
+
+
+/* ALLOW_MREDUP
+ *
+ * Allow m-reduplication. This allows analysis of second components of
+ * reduplicated forms like 'araba maraba' and 'kitap mitap'.
+ *
+ * This is a mostly colloquial use, and one may want to disable in
+ * some cases. It also increases the ambiguous analysis of words that
+ * start with 'm'.
+ *
+ */
+
+#define ALLOW_MREDUP 1
+
+/* DOUBLE_NEGATIVE
+ *
+ * This enables analysis of words with non-standard redundant
+ * duplication of negative suffix -mA in words like
+ * 'görmeMEzlikten/duymaMAzlıktan gel-'.
+ *
+ */
+
+#define DOUBLE_NEGATIVE 1

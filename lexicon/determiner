@@ -25,9 +25,9 @@ birkaç          DetIndef;
 birkaç% tane    DetIndef;
 birtakım        DetIndef;
 birço^k         DetIndef;
-biraz           DetIndef;
+bˈiraz           DetIndef;
 bir% miktar     DetIndef;
-bazı            DetIndef;
+bˈazı            DetIndef;
 kimi            DetIndef;
 bir% kısım      DetIndef;
 bir% kesim      DetIndef;
@@ -43,12 +43,12 @@ pekço^k         DetIndef;
 çoğu            DetIndef; ! no pronoun
 az              DetIndef;
 fazla           DetIndef;
-hiçbir          DetIndef;
-hiç% bir        DetIndef;
+hiçbir          DetIndefNeg;
+hiç% bir        DetIndefNeg;
 herhangi        DetIndef;
 herhangi% bir   DetIndef;
 başka           DetIndef;
-bunca           DetIndef;
+bˈunca           DetIndef;
 öyle            DetIndef;
 böyle           DetIndef;
 böylesi         DetIndef; ! no pronoun 

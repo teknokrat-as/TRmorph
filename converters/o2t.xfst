@@ -124,12 +124,13 @@ define abbrfilter A -> a, B -> b, C -> c, Ç -> ç, D -> d, E -> e,
 
 define o2t %+Punc      ->  %<Punc%> 
 
-        .o. %+Noun %+NotAbleState   -> %<abil%> %<neg%> %<aor%> %<Adj%> %<lik%> %<N%>
+        .o. %+Noun %+NotAbleState   -> %<abil%> %<V%> %<neg%> %<aor%> %<Adj%> %<lik%> %<N%>
         .o. %+Noun %+NotState       -> %<neg%> %<aor%> %<Adj%> %<lik%> %<N%>
         .o. %+Noun %+ActOf          -> %<vn%:inf%> %<N%> %<ca%> %<N%>
         .o. %+Noun %+Agt -> %<yici%> %<Adj%>    || %+Verb \%^DB* %^DB _
         .o. %+Noun %+Agt %+Prop     -> %<ci%> %<N%:prop%>      
         .o. %+Noun %+Agt            -> %<ci%> %<N%>      
+        .o. %+Dim %+Noun            -> %+Dim
         .o. %+Noun %+Dim            -> %<dim%> %<N%>     
         .o. %+Noun %+FeelLike       -> %<esi%> %<Adj%>   
         .o. %+Noun %+FutPart        -> %<vn%:fut%> %<N%> 
@@ -141,6 +142,7 @@ define o2t %+Punc      ->  %<Punc%>
         .o. %+Noun %+Inf3 %+Prop    -> %<vn%:yis%> %<N%:prop%> 
         .o. %+Noun %+Inf3           -> %<vn%:yis%> %<N%> 
         .o. %+Noun %+PastPart       -> %<vn%:past%> %<N%>
+        .o. %+Noun %+PresPart       -> %<vn%:pres%> %<N%>
         .o. %+Noun %+Ness           -> %<lik%> %<N%>     
         .o. %+Noun %+Zero           -> %<%0%> %<N%>      
         .o. %+Noun %+Prop           -> %<N%:prop%>       
@@ -210,8 +212,8 @@ define o2t %+Punc      ->  %<Punc%>
         .o. %+Adj %+PresPart  -> %<part%:pres%> %<Adj%>
         .o. %+Adj %+FutPart   -> %<part%:fut%> %<Adj%>
         .o. %+Adj %+PastPart  -> %<part%:past%> %<Adj%>
+        .o. %+Adj %+Related   -> %<sal%> %<Adj%>
         .o. %+Adj %+Rel       -> %<ki%> %<Adj%>
-!        .o. %+Adj %+Related   -> %<sal%> %<Adj%>
         .o. %+Adj %+With      -> %<li%> %<Adj%>
         .o. %+Adj %+Without   -> %<siz%> %<Adj%>
         .o. %+Adj %+Zero      -> %<%0%> %<Adj%>
@@ -241,7 +243,7 @@ define o2t %+Punc      ->  %<Punc%>
         .o. %+Adverb %+ByDoingSo     -> %<cv%:erek%> %<Adv%>
         .o. %+Adverb %+Since         -> %<dir%> %<Adv%>
 
-        .o. %+Adverb %+WithoutBeingAbleToHaveDoneSo -> %<abil%> %<neg%> %<cv%:den%> %<Adv%>
+        .o. %+Adverb %+WithoutBeingAbleToHaveDoneSo -> %<neg%> %<abil%> %<V%> %<cv%:den%> %<Adv%>
         .o. %+Adverb %+WithoutHavingDoneSo  -> %<neg%> %<cv%:den%> %<Adv%>
 
         .o. %+Adverb -> %<Adv%>
@@ -380,7 +382,7 @@ define o2t %+Punc      ->  %<Punc%>
 
         .o. %<Adj%> -> %<Exist%> || .#. {var} _ 
         .o. %<Adj%> -> %<Exist%:neg%> || .#. {yok} _ 
-        .o. %<V%>   -> %<Not%> %<0%> %<V%> || .#. {değil} _
+        .o. %<V%>   -> %<Not%> %<%0%> %<V%> || .#. {değil} _
 
         .o. {birinci} %<Num%> %<ord%> -> {bir} %<Num%> %<ord%>
         .o. {ikinci} %<Num%> %<ord%> -> {iki} %<Num%> %<ord%>
@@ -556,10 +558,13 @@ define o2t %+Punc      ->  %<Punc%>
 
         .o. %<Prn%:qst%> -> %<Prn%:qst%:pers%> || .#. {kim} _
         .o. %<Prn%:qst%> -> %<Prn%:qst%:pers%> || .#. {hangi} _
-        .o. %<N%> -> %<Adj%> %<0%> %<N%> || .#. {hangi} _
-        .o. %<V%> %<part%:pres%> %<Adj%> %<0%> %<N%> -> %<vn%:pres%> %<N%>
+        .o. %<N%> -> %<Adj%> %<%0%> %<N%> || .#. {hangi} _
+        .o. %<V%> %<part%:pres%> %<Adj%> %<%0%> %<N%> -> %<V%> %<vn%:pres%> %<N%>
         .o. s [e|a] l %<Adj%> -> %<N%> %<sal%> %<Adj%>
-        .o. %<0%> %<N%> -> 0 || %<N%:prop%> _ 
+        .o. %<%0%> %<N%> -> 0 || %<N%:prop%> _ 
+        .o. %<%0%> %<V%> -> %<%0%> %<V%> %<cpl%:pres%> || 
+                [%<Exist%>|%<Exist%:neg%>] _ %<3s%> .#.
+        .o. %<Exist%:neg%> -> %<Adj%> || y o k _ %<%0%> %<N%>
         ;
 
 
